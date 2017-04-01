@@ -7,7 +7,7 @@ wechat jssdk signature for express middleware
 ## Installation
 
 ```bash
-$ npm install express
+$ npm install --save express-jssdk
 ```
 
 ## Usage
