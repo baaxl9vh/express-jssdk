@@ -22,11 +22,7 @@ var app = express()
 
 app.get('/jsssdk', jssdk({
   appId: 'wxe8524f4abcd8c270',                         // 公众号appId，
-  secret: '8d63747f264446a3b21abcd100e64039',          // 公众号secret，
-  corp: false,                                         // 是否企业号，corp account or not, default false
-  nonceStrLength: 16,                                  // 随机字符串长度，最长32位，nonceStr length, default 16
-  tokenFilename: __dirname + '/local-token.json',      // access_token存储文件，access_token local file，default:__dirname/local-token.json
-  ticketFilename: __dirname + '/local-ticket.json'     // jsapi ticket存储文件，jsapi ticket local file，default:__dirname/local-ticket.json
+  secret: '8d63747f264446a3b21abcd100e64039'           // 公众号secret，
 }))
 
 app.listen(80, function () {})
@@ -90,6 +86,17 @@ $.ajax({
         console.log(err);
     }
 });
+```
+## Configure JSSDK
+```javascript
+{
+  appId: 'wxe8524f4abcd8c270',                         // 公众号appId，
+  secret: '8d63747f264446a3b21abcd100e64039',          // 公众号secret，
+  corp: false,                                         // 是否企业号，corp account or not, default false
+  nonceStrLength: 16,                                  // 随机字符串长度，最长32位，nonceStr length, default 16
+  tokenFilename: __dirname + '/local-token.json',      // access_token存储文件，access_token local file，default:__dirname/local-token.json
+  ticketFilename: __dirname + '/local-ticket.json'     // jsapi ticket存储文件，jsapi ticket local file，default:__dirname/local-ticket.json
+}
 ```
 ## License
 
