@@ -4,6 +4,11 @@
 
 wechat jssdk signature for express middleware
 
+## Installation
+
+```bash
+$ npm install express
+```
 
 ## Usage
 
@@ -86,3 +91,6 @@ $.ajax({
     }
 });
 ```
+## License
+
+[MIT License](http://www.opensource.org/licenses/mit-license.php)
