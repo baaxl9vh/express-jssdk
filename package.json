@@ -1,0 +1,24 @@
+{
+  "name": "express-jssdk",
+  "version": "0.0.2",
+  "description": "jssdk signature for express middleware",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/junxuwu/express-jssdk.git"
+  },
+  "keywords": [
+    "jssdk",
+    "wechat",
+    "weixin"
+  ],
+  "author": "jay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/junxuwu/express-jssdk/issues"
+  },
+  "homepage": "https://github.com/junxuwu/express-jssdk#readme"
+}
