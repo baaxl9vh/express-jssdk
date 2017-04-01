@@ -31,58 +31,58 @@ app.listen(80, function () {})
 
 ```javascript
 $.ajax({
-        url: 'api root' + '/jssdk/',
-        dataType: 'json',
-        type: 'GET',
-        data: {url: 'url for sign'},
-        success: function (data) {
-            wx.config({
-                appId: data.appId,
-                timestamp: data.timestamp,
-                nonceStr: data.nonceStr,
-                signature: data.signature,
-                jsApiList: [
-                    'checkJsApi',
-                    'onMenuShareTimeline',
-                    'onMenuShareAppMessage',
-                    'hideMenuItems'
-                ]
+    url: 'api root' + '/jssdk/',
+    dataType: 'json',
+    type: 'GET',
+    data: {url: 'url for sign'},
+    success: function (data) {
+        wx.config({
+            appId: data.appId,
+            timestamp: data.timestamp,
+            nonceStr: data.nonceStr,
+            signature: data.signature,
+            jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'hideMenuItems'
+            ]
+        });
+        wx.ready(function () {
+            wx.hideMenuItems({
+                menuList: [
+                    'menuItem:share:qq', 
+                    'menuItem:share:weiboApp', 
+                    'menuItem:share:QZone',
+                    'menuItem:share:email'
+                ], 
+                success: function (res) {
+                },
+                fail: function (res) {
+                } 
             });
-            wx.ready(function () {
-                wx.hideMenuItems({
-                    menuList: [
-                        'menuItem:share:qq', 
-                        'menuItem:share:weiboApp', 
-                        'menuItem:share:QZone',
-                        'menuItem:share:email'
-                    ], 
-                    success: function (res) {
-                    },
-                    fail: function (res) {
-                    } 
-                });
-                wx.onMenuShareAppMessage({
-                    link: 'link url',
-                    title: 'title',
-                    desc: 'desc',
-                    imgUrl: 'icon url',
-                    success: function (res) {
-                        console.log('share to friend success');
-                    }
-                });
+            wx.onMenuShareAppMessage({
+                link: 'link url',
+                title: 'title',
+                desc: 'desc',
+                imgUrl: 'icon url',
+                success: function (res) {
+                    console.log('share to friend success');
+                }
+            });
 
-                wx.onMenuShareTimeline({
-                    link: 'link url',
-                    title: 'title',
-                    imgUrl: 'icon url',
-                    success: function (res) {
-                        console.log('share to timeline success');
-                    }
-                });
+            wx.onMenuShareTimeline({
+                link: 'link url',
+                title: 'title',
+                imgUrl: 'icon url',
+                success: function (res) {
+                    console.log('share to timeline success');
+                }
             });
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
+        });
+    },
+    error: function (err) {
+        console.log(err);
+    }
+});
 ```
