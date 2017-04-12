@@ -20,7 +20,7 @@ var express = require('express')
 var jssdk = require('express-jssdk')
 var app = express()
 
-app.get('/jsssdk', jssdk({
+app.get('/jssdk', jssdk({
   appId: 'wxe8524f4abcd8c270',                         // 公众号appId，
   secret: '8d63747f264446a3b21abcd100e64039'           // 公众号secret，
 }))
