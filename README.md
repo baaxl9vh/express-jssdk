@@ -21,8 +21,8 @@ var jssdk = require('express-jssdk')
 var app = express()
 
 app.get('/jssdk', jssdk({
-  appId: 'wxe8524f4abcd8c270',                         // 公众号appId，
-  secret: '8d63747f264446a3b21abcd100e64039'           // 公众号secret，
+  appId: 'your app id',                         // 公众号appId，
+  secret: 'your secret'                         // 公众号secret，
 }))
 
 app.listen(80, function () {})
@@ -90,14 +90,21 @@ $.ajax({
 ## Configure JSSDK
 ```javascript
 {
-  appId: 'wxe8524f4abcd8c270',                         // 公众号appId，
-  secret: '8d63747f264446a3b21abcd100e64039',          // 公众号secret，
+  appId: 'your app id',                                // 公众号appId，
+  secret: 'your secret',                               // 公众号secret，
   corp: false,                                         // 是否企业号，corp account or not, default false
   nonceStrLength: 16,                                  // 随机字符串长度，最长32位，nonceStr length, default 16
+  type: 'file',                                        // 票据和token保存方式：file，本地文件，redis，保存在redis
   tokenFilename: __dirname + '/local-token.json',      // access_token存储文件，access_token local file，default:__dirname/local-token.json
   ticketFilename: __dirname + '/local-ticket.json'     // jsapi ticket存储文件，jsapi ticket local file，default:__dirname/local-ticket.json
+  redisHost: '127.0.0.1',                              // redis server host ip
+  redisPort: 6379,                                     // redis server port
+  redisAuth: 'your reids passwrd'                      // redis password
 }
 ```
+
+## Change Log
+2018-4-24, 添加票据和token保存到redis
 ## License
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)

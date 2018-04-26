@@ -1,6 +1,6 @@
 {
   "name": "express-jssdk",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "jssdk signature for express middleware",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,12 @@
   "bugs": {
     "url": "https://github.com/junxuwu/express-jssdk/issues"
   },
-  "homepage": "https://github.com/junxuwu/express-jssdk#readme"
+  "homepage": "https://github.com/junxuwu/express-jssdk#readme",
+  "dependencies": {
+    "redis": "^2.8.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {}
 }
