@@ -1,7 +1,11 @@
 
 import express from 'express';
 
+
+
 declare namespace jssdk {
+  
+  type SaveType = 'file' | 'redis' | 'mem';
 
   /**
    * 配置项
