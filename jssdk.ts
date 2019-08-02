@@ -19,12 +19,12 @@ const TYPE_TOKEN = 2;
 /**
  * 配置项
  */
-let options: ConfigOptions = {
+let defaultOptions: ConfigOptions = {
   corp: false,                                            // 是否企业号
   appId: '',
   secret: '',
   nonceStrLength: 16,                                     // 随机字符串长度，最长32位
-  type: 'file',                                           // ticket和token持久化类型，默认file，可选redis
+  type: 'mem',                                           // ticket和token持久化类型，默认file，可选redis
   redisHost: '127.0.0.1',                                 // redis host
   redisPort: 6379,                                        // redis port
   redisAuth: 'your redis password',                       // redis password
@@ -61,16 +61,22 @@ export const jssdk = (option: ConfigOptions) => {
   if (!option.hasOwnProperty('appId') || !option.hasOwnProperty('secret')) {
     throw new Error('appId and secret must be provided!');
   }
-  options = Object.assign(options, option);
+  if (option.type === 'file' && (!option.tokenFilename || !option.ticketFilename)) {
+    throw new Error('if type = file, tokenFilename and ticketFilename must be provided!');
+  }
+  if (option.type === 'redis' && (!option.redisHost || !option.redisPort)) {
+    throw new Error('if type = redis, redis config must be provided!');
+  }
+  defaultOptions = Object.assign(defaultOptions, option);
 
   // 票据token储到redis
-  if ('redis' === options.type) {
+  if ('redis' === defaultOptions.type) {
     const conf: ClientOpts = {
-      host: options.redisHost,
-      port: options.redisPort,
+      host: defaultOptions.redisHost,
+      port: defaultOptions.redisPort,
     };
-    if (options.redisAuth) {
-      conf.password = options.redisAuth;
+    if (defaultOptions.redisAuth) {
+      conf.password = defaultOptions.redisAuth;
     }
     redisClient = redis.createClient(conf);
     redisClient.on('error', (err) => {
@@ -104,16 +110,16 @@ function createNonceStr(length: number = 16) {
 }
 
 function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
-  readTokenOrTicket(options.type, TYPE_TOKEN, (err, data) => {
+  readTokenOrTicket(defaultOptions.type, TYPE_TOKEN, (err, data) => {
     if (err || !data || !data.accessToken || data.expireTime < Date.now()) {
       // 如果是企业号用以下URL获取access_token
       let url = '';
-      if (options.corp) {
+      if (defaultOptions.corp) {
         url = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid='
-          + options.appId + '&corpsecret=' + options.secret;
+          + defaultOptions.appId + '&corpsecret=' + defaultOptions.secret;
       } else {
         url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='
-          + options.appId + '&secret=' + options.secret;
+          + defaultOptions.appId + '&secret=' + defaultOptions.secret;
       }
       https.get(url, (res) => {
         res.on('data', (d) => {
@@ -127,7 +133,7 @@ function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
             tokenData.expireTime = Date.now() + 7000000;
             if (tokenData.accessToken) {
               cb(null, tokenData.accessToken);
-              saveTokenOrTicket(options.type, TYPE_TOKEN, tokenData);
+              saveTokenOrTicket(defaultOptions.type, TYPE_TOKEN, tokenData);
             } else {
               cb(new Error('No token response'), null);
             }
@@ -145,13 +151,13 @@ function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
 }
 
 function getJsApiTicket(cb: (err: Error | null, ticket: string | null) => void) {
-  readTokenOrTicket(options.type, TYPE_TICKET, (err, data) => {
+  readTokenOrTicket(defaultOptions.type, TYPE_TICKET, (err, data) => {
     if (err || !data || !data.expireTime || data.expireTime < Date.now()) {
       getAccessToken((error, token) => {
         if (error) {
           cb(error, null);
         }
-        https.get(options.corp ? GET_TICKET_URL_CORP + token : GET_TICKET_URL + token, (res) => {
+        https.get(defaultOptions.corp ? GET_TICKET_URL_CORP + token : GET_TICKET_URL + token, (res) => {
           res.on('data', (d) => {
             const ticketData: TokenData = {
               ticket: '',
@@ -166,7 +172,7 @@ function getJsApiTicket(cb: (err: Error | null, ticket: string | null) => void) 
               } else {
                 cb(new Error('No ticket response'), null);
               }
-              saveTokenOrTicket(options.type, TYPE_TICKET, ticketData);
+              saveTokenOrTicket(defaultOptions.type, TYPE_TICKET, ticketData);
             } catch (error) {
               cb(error, null);
             }
@@ -195,13 +201,13 @@ function sign(url: string, cb: SignCallback) {
     }
 
     const timestamp = Math.floor(Date.now() / 1000);
-    const nonceStr = createNonceStr(options.nonceStrLength);
+    const nonceStr = createNonceStr(defaultOptions.nonceStrLength);
     const signStr = 'jsapi_ticket=' + ticket + '&noncestr=' + nonceStr + '&timestamp=' + timestamp + '&url=' + url;
 
     const signature = crypto.createHash('sha1').update(signStr).digest('hex');
 
     cb(null, {
-      appId: options.appId,
+      appId: defaultOptions.appId,
       nonceStr,
       timestamp,
       url,
@@ -217,7 +223,7 @@ function sign(url: string, cb: SignCallback) {
  * @param {object} data
  * @param {string} fileName
  */
-function saveTokenOrTicket(saveType: string, tokenOrTicket: number, data: TokenData) {
+function saveTokenOrTicket(saveType: SaveType, tokenOrTicket: number, data: TokenData) {
   refreshCache(tokenOrTicket, data);
   if ('redis' === saveType) {
     if (!redisClient.connected) {
@@ -226,8 +232,8 @@ function saveTokenOrTicket(saveType: string, tokenOrTicket: number, data: TokenD
     }
     const key = tokenOrTicket === TYPE_TICKET ? REDIS_KEY_TICKET : REDIS_KEY_TOKEN;
     redisClient.set(key, JSON.stringify(data));
-  } else {
-    const fileName = tokenOrTicket === TYPE_TICKET ? options.ticketFilename : options.tokenFilename;
+  } else if ('file' === saveType) {
+    const fileName = tokenOrTicket === TYPE_TICKET ? defaultOptions.ticketFilename : defaultOptions.tokenFilename;
     if (!fileName) {
       console.log('No filename');
       return;
@@ -248,7 +254,6 @@ function refreshCache(tokenOrTicket: number, data: TokenData) {
     tokenCache.expireTime = data.expireTime;
     tokenCache.accessToken = data.accessToken;
   }
-
 }
 
 const REDIS_KEY_TOKEN = 'jssdk.token';
@@ -290,8 +295,8 @@ function readTokenOrTicket(saveType: SaveType, tokenOrTicket: number, callback: 
         }
       }
     });
-  } else {
-    const fileName = tokenOrTicket === TYPE_TICKET ? options.ticketFilename : options.tokenFilename;
+  } else if ('file' === saveType) {
+    const fileName = tokenOrTicket === TYPE_TICKET ? defaultOptions.ticketFilename : defaultOptions.tokenFilename;
     if (!fileName) {
       callback(new Error('No filename'), null);
       return;
@@ -308,5 +313,8 @@ function readTokenOrTicket(saveType: SaveType, tokenOrTicket: number, callback: 
         }
       }
     });
+  } else {
+    // 不是file也不是redis，返回空，让后面逻辑去微信服务器请求
+    callback(null, null);
   }
 }

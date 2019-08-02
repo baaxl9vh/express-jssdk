@@ -10,11 +10,15 @@
   <script src="//res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
   <script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
   <script>
+    var url = window.location.protocol + '//yourdomain.com/index.html';
+    var title = 'Test Share'
+    var desc = 'Test Desc'
+    var icon = window.location.protocol + '//yourdomain.com/icon.jpg'
     $.ajax({
-        url: 'http://192.168.1.24:3000' + '/jssdk/',
+        url: '//yourdomain.com/api/jssdk/',
         dataType: 'json',
         type: 'GET',
-        data: {url: 'http://yourdomain.com/path/index.html'},
+        data: {url: '//yourdomain.com/path/index.html'},
         success: function (data) {
             wx.config({
                 appId: data.appId,
@@ -42,19 +46,20 @@
                     } 
                 });
                 wx.onMenuShareAppMessage({
-                    link: 'link url',
-                    title: 'title',
-                    desc: 'desc',
-                    imgUrl: 'icon url',
+                    link: url,
+                    title: title,
+                    desc: desc,
+                    imgUrl: icon,
                     success: function (res) {
                         console.log('share to friend success');
                     }
                 });
 
                 wx.onMenuShareTimeline({
-                    link: 'link url',
-                    title: 'title',
-                    imgUrl: 'icon url',
+                    link: url,
+                    title: title,
+                    desc: desc,
+                    imgUrl: icon,
                     success: function (res) {
                         console.log('share to timeline success');
                     }
