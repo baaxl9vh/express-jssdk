@@ -1,10 +1,11 @@
 {
   "name": "express-jssdk",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "jssdk signature for express middleware",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "test"
+    "test": "ts-node test/sign.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,14 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/cors": "^2.8.5",
+    "@types/express": "^4.17.0",
+    "@types/node": "^12.6.8",
+    "@types/redis": "^2.8.13",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  }
 }

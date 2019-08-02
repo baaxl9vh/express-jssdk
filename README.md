@@ -7,7 +7,7 @@ wechat jssdk signature for express middleware
 ## Installation
 
 ```bash
-$ npm install --save express-jssdk
+npm install --save express-jssdk
 ```
 
 ## Usage
@@ -28,6 +28,7 @@ app.get('/jssdk', jssdk({
 app.listen(80, function () {})
 
 ```
+
 ### Client Side
 
 ```javascript
@@ -52,15 +53,15 @@ $.ajax({
         wx.ready(function () {
             wx.hideMenuItems({
                 menuList: [
-                    'menuItem:share:qq', 
-                    'menuItem:share:weiboApp', 
+                    'menuItem:share:qq',
+                    'menuItem:share:weiboApp',
                     'menuItem:share:QZone',
                     'menuItem:share:email'
-                ], 
+                ],
                 success: function (res) {
                 },
                 fail: function (res) {
-                } 
+                }
             });
             wx.onMenuShareAppMessage({
                 link: 'link url',
@@ -87,7 +88,9 @@ $.ajax({
     }
 });
 ```
+
 ## Configure JSSDK
+
 ```javascript
 {
   appId: 'your app id',                                // 公众号appId，
@@ -104,7 +107,10 @@ $.ajax({
 ```
 
 ## Change Log
+
 2018-4-24, 添加票据和token保存到redis
+2019-8-2, 默认会在保存一份token和ticket在运行内存，内存中token和ticket未过时时，直接使用内存数据
+
 ## License
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)

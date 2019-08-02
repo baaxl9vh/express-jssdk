@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="//res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+  <script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
+  <script>
+    $.ajax({
+        url: 'http://192.168.1.24:3000' + '/jssdk/',
+        dataType: 'json',
+        type: 'GET',
+        data: {url: 'http://web-static.palwo.com/test/index.html'},
+        success: function (data) {
+            wx.config({
+                appId: data.appId,
+                timestamp: data.timestamp,
+                nonceStr: data.nonceStr,
+                signature: data.signature,
+                jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'hideMenuItems'
+                ]
+            });
+            wx.ready(function () {
+                wx.hideMenuItems({
+                    menuList: [
+                        'menuItem:share:qq', 
+                        'menuItem:share:weiboApp', 
+                        'menuItem:share:QZone',
+                        'menuItem:share:email'
+                    ], 
+                    success: function (res) {
+                    },
+                    fail: function (res) {
+                    } 
+                });
+                wx.onMenuShareAppMessage({
+                    link: 'link url',
+                    title: 'title',
+                    desc: 'desc',
+                    imgUrl: 'icon url',
+                    success: function (res) {
+                        console.log('share to friend success');
+                    }
+                });
+
+                wx.onMenuShareTimeline({
+                    link: 'link url',
+                    title: 'title',
+                    imgUrl: 'icon url',
+                    success: function (res) {
+                        console.log('share to timeline success');
+                    }
+                });
+            });
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+  </script>
+</body>
+</html>
