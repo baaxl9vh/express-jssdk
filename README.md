@@ -110,6 +110,7 @@ $.ajax({
 
 + 2018-4-24, 添加票据和token保存到redis
 + 2019-8-2, 默认会在保存一份token和ticket在运行内存，内存中token和ticket未过时时，直接使用内存数据
++ 2019-8-2, 添加Typescript types 文件
 
 ## License
 

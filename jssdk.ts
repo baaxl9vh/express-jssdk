@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import https from 'https';
 import redis, { ClientOpts, RedisClient } from 'redis';
+import { JSSDKOptions } from './lib/jssdk';
 
 const NONCE_STR_MAX = 32;
 const GET_TICKET_URL = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=';
@@ -19,7 +20,7 @@ const TYPE_TOKEN = 2;
 /**
  * 配置项
  */
-let defaultOptions: ConfigOptions = {
+let defaultOptions: JSSDKOptions = {
   corp: false,                                            // 是否企业号
   appId: '',
   secret: '',
@@ -57,7 +58,7 @@ let redisClient: RedisClient;
  * 导出中间件
  * @param {object} option
  */
-export const jssdk = (option: ConfigOptions) => {
+export const jssdk = (option: JSSDKOptions) => {
   if (!option.hasOwnProperty('appId') || !option.hasOwnProperty('secret')) {
     throw new Error('appId and secret must be provided!');
   }
@@ -110,7 +111,7 @@ function createNonceStr(length: number = 16) {
 }
 
 function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
-  readTokenOrTicket(defaultOptions.type, TYPE_TOKEN, (err, data) => {
+  readTokenOrTicket(defaultOptions.type || 'mem', TYPE_TOKEN, (err, data) => {
     if (err || !data || !data.accessToken || data.expireTime < Date.now()) {
       // 如果是企业号用以下URL获取access_token
       let url = '';
@@ -133,7 +134,7 @@ function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
             tokenData.expireTime = Date.now() + 7000000;
             if (tokenData.accessToken) {
               cb(null, tokenData.accessToken);
-              saveTokenOrTicket(defaultOptions.type, TYPE_TOKEN, tokenData);
+              saveTokenOrTicket(defaultOptions.type || 'mem', TYPE_TOKEN, tokenData);
             } else {
               cb(new Error('No token response'), null);
             }
@@ -151,7 +152,7 @@ function getAccessToken(cb: (err: Error | null, token: string | null) => void) {
 }
 
 function getJsApiTicket(cb: (err: Error | null, ticket: string | null) => void) {
-  readTokenOrTicket(defaultOptions.type, TYPE_TICKET, (err, data) => {
+  readTokenOrTicket(defaultOptions.type || 'mem', TYPE_TICKET, (err, data) => {
     if (err || !data || !data.expireTime || data.expireTime < Date.now()) {
       getAccessToken((error, token) => {
         if (error) {
@@ -172,7 +173,7 @@ function getJsApiTicket(cb: (err: Error | null, ticket: string | null) => void) 
               } else {
                 cb(new Error('No ticket response'), null);
               }
-              saveTokenOrTicket(defaultOptions.type, TYPE_TICKET, ticketData);
+              saveTokenOrTicket(defaultOptions.type || 'mem', TYPE_TICKET, ticketData);
             } catch (error) {
               cb(error, null);
             }
