@@ -1,6 +1,6 @@
 {
   "name": "express-jssdk",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "description": "jssdk signature for express middleware",
   "main": "./dist/jssdk.js",
   "types": "./lib/jssdk.d.ts",
@@ -26,9 +26,6 @@
   "dependencies": {
     "redis": "^2.8.0",
     "@types/express": "^4.17.0"
-  },
-  "directories": {
-    "test": "test"
   },
   "devDependencies": {
     "@types/cors": "^2.8.5",

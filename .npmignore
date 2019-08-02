@@ -1,0 +1,4 @@
+test/
+global.d.ts
+tsconfig.json
+tslint.json
