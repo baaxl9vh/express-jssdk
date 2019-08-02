@@ -10,8 +10,8 @@ app.use(cors({
 }));
 
 app.get('/jssdk', jssdk({
-  appId: 'wx8372b24417f593f2',
-  secret: 'd649471dad4e9530c2ed7068089d9a82',
+  appId: 'your app id',
+  secret: 'your secret',
   type: 'file',
   tokenFilename: __dirname + '/local-token.json',
   ticketFilename: __dirname + '/local-ticket.json',

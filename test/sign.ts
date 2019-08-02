@@ -14,10 +14,10 @@ const res = {
 };
 
 const expressMiddle = jssdk({
-  appId: 'wx8372b24417f593f2',
-  secret: 'd649471dad4e9530c2ed7068089d9a82',
+  appId: 'your app id',
+  secret: 'your secret',
   type: 'file',
-  redisHost: '192.168.1.7',
+  redisHost: '127.0.0.1',
   redisPort: 6379,
   tokenFilename: __dirname + '/local-token.json',
   ticketFilename: __dirname + '/local-ticket.json',
