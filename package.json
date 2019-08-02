@@ -1,8 +1,8 @@
 {
   "name": "express-jssdk",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "jssdk signature for express middleware",
-  "main": "dist/index.js",
+  "main": "dist/jssdk.js",
   "scripts": {
     "test": "ts-node test/sign.ts",
     "build": "tsc"
