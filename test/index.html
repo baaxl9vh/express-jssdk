@@ -11,14 +11,14 @@
   <script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
   <script>
     var url = window.location.protocol + '//yourdomain.com/index.html';
-    var title = 'Test Share'
-    var desc = 'Test Desc'
-    var icon = window.location.protocol + '//yourdomain.com/icon.jpg'
+    var title = 'Test Share';
+    var desc = 'Test Desc';
+    var icon = window.location.protocol + '//yourdomain.com/icon.jpg';
     $.ajax({
         url: '//yourdomain.com/api/jssdk/',
         dataType: 'json',
         type: 'GET',
-        data: {url: '//yourdomain.com/path/index.html'},
+        data: {url: window.location.href},          // 这里一定要用window.location.href，不然会二次分享无自定义分享，签名的url一定要与当前页面一致，包括query参数，二次分享会自动加上参数
         success: function (data) {
             wx.config({
                 appId: data.appId,
@@ -27,6 +27,8 @@
                 signature: data.signature,
                 jsApiList: [
                     'checkJsApi',
+                    'updateAppMessageShareData',    // 1.4版本
+                    'updateTimelineShareData',      // 1.4版本
                     'onMenuShareTimeline',
                     'onMenuShareAppMessage',
                     'hideMenuItems'
@@ -35,15 +37,30 @@
             wx.ready(function () {
                 wx.hideMenuItems({
                     menuList: [
-                        'menuItem:share:qq', 
                         'menuItem:share:weiboApp', 
-                        'menuItem:share:QZone',
                         'menuItem:share:email'
                     ], 
                     success: function (res) {
                     },
                     fail: function (res) {
                     } 
+                });
+                wx.updateAppMessageShareData({ 
+                  title: title,
+                  desc: desc,
+                  link: url,
+                  imgUrl: icon,
+                  success: function () {
+                    console.log('updateAppMessageShareData success');
+                  }
+                });
+                wx.updateTimelineShareData({ 
+                  title: desc,
+                  link: url,
+                  imgUrl: icon,
+                  success: function () {
+                    console.log('updateTimelineShareData success');
+                  }
                 });
                 wx.onMenuShareAppMessage({
                     link: url,
@@ -54,10 +71,9 @@
                         console.log('share to friend success');
                     }
                 });
-
                 wx.onMenuShareTimeline({
                     link: url,
-                    title: title,
+                    title: desc,
                     desc: desc,
                     imgUrl: icon,
                     success: function (res) {
