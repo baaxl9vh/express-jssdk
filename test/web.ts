@@ -15,6 +15,7 @@ app.get('/jssdk', jssdk({
   type: 'file',
   tokenFilename: __dirname + '/local-token.json',
   ticketFilename: __dirname + '/local-ticket.json',
+  debug: true,
 }));
 
 app.listen(3000, () => {

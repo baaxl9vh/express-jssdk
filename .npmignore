@@ -2,3 +2,10 @@ test/
 global.d.ts
 tsconfig.json
 tslint.json
+
+local-t*.json
+
+src/
+
+**/**/*.spec.ts
+**/**/*.spec.js

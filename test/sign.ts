@@ -21,6 +21,7 @@ const expressMiddle = jssdk({
   redisPort: 6379,
   tokenFilename: __dirname + '/local-token.json',
   ticketFilename: __dirname + '/local-ticket.json',
+  debug: true,
 });
 
 setTimeout(() => {

@@ -19,6 +19,7 @@ const fileMiddle = jssdk({
   type: 'file',
   tokenFilename: __dirname + '/local-token.json',
   ticketFilename: __dirname + '/local-ticket.json',
+  debug: true,
 });
 
 fileMiddle(req, res);
@@ -27,6 +28,7 @@ const noFileMiddle = jssdk({
   appId: 'your app id',
   secret: 'your secret',
   type: 'file',
+  debug: true,
 });
 
 noFileMiddle(req, res);

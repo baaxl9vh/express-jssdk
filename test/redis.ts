@@ -19,6 +19,7 @@ const redisMiddle = jssdk({
   type: 'redis',
   redisHost: '127.0.0.1',
   redisPort: 6379,
+  debug: true,
 });
 
 redisMiddle(req, res);
@@ -27,6 +28,7 @@ const noRedisMiddle = jssdk({
   appId: 'your app id',
   secret: 'your secret',
   type: 'redis',
+  debug: true,
 });
 
-noRedisMiddle({}, {});
+noRedisMiddle(req, res);

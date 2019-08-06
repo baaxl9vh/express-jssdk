@@ -1,6 +1,6 @@
 # express-jssdk
 
-微信JSSDK接口权限注入配置 Express 中间件
+微信公从号JSSDK接口签名 Express 中间件
 
 wechat jssdk signature for express middleware
 
@@ -118,12 +118,13 @@ $.ajax({
   secret: 'your secret',                               // 公众号secret，
   corp: false,                                         // 是否企业号，corp account or not, default false
   nonceStrLength: 16,                                  // 随机字符串长度，最长32位，nonceStr length, default 16
-  type: 'mem',                                         // 票据和token保存方式：file，本地文件，redis，保存在redis，mem，默认值，只缓存在内存，不保存到文件或者redis
+  type: 'none',                                        // 票据和token保存方式：file，本地文件，redis，保存在redis，none，默认值，不保存到文件或者redis，type=none时，会强制修改cache=true
   tokenFilename: __dirname + '/local-token.json',      // access_token存储文件，access_token local file，default:__dirname/local-token.json
   ticketFilename: __dirname + '/local-ticket.json'     // jsapi ticket存储文件，jsapi ticket local file，default:__dirname/local-ticket.json
   redisHost: '127.0.0.1',                              // redis server host ip
   redisPort: 6379,                                     // redis server port
-  redisAuth: 'your reids passwrd'                      // redis password
+  redisAuth: 'your reids passwrd',                     // redis password
+  cache: true                                          // 是否缓存在进程内存，默认true
 }
 ```
 
@@ -133,6 +134,11 @@ $.ajax({
 + 2019-8-2, 默认会在保存一份token和ticket在运行内存，内存中token和ticket未过时时，直接使用内存数据
 + 2019-8-2, 添加Typescript types 文件
 + 2019-8-3, 更新usage
++ 2019-8-5, 修复回调bug，修订type参数，默认为none方试，只在进程内存缓存，配置项添加cache参数，添加mocha测试用例
+
+## TODO
+
++ 支持多公众号[版本](./src/jssdk.ts)
 
 ## License
 

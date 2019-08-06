@@ -16,6 +16,7 @@ const res = {
 const expressMiddle = jssdk({
   appId: 'wx8372b24417f593f2',
   secret: 'd649471dad4e9530c2ed7068089d9a82',
+  debug: true,
 });
 
 setTimeout(() => {

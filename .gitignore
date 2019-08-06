@@ -1,6 +1,8 @@
 
 node_modules/
-.vscode/
 dist/
 
 test/*.json
+
+local-ticket.json
+local-token.json
