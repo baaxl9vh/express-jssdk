@@ -212,4 +212,31 @@ describe('express-jssdk', () => {
     });
   });
 
+  describe('url undefined', () => {
+    it('url undefined', (done) => {
+      // 只使用缓存方式，每次都要去微信拉token和ticket，延迟比较高
+      const options: Options = {
+        appId,
+        secret,
+      };
+      jssdk(options)(
+        {
+          query: {},
+          body: {},
+        },
+        {
+          json: (body: Result) => {
+            assert.equal(body.errCode, 4001);
+            assert.equal(body.msg, 'argument url must be provided!');
+            chai.assert.isUndefined(body.appId);
+            chai.assert.isUndefined(body.nonceStr);
+            chai.assert.isUndefined(body.signature);
+            chai.assert.isUndefined(body.timestamp);
+            chai.assert.isUndefined(body.url);
+            done();
+          },
+        });
+    });
+  });
+
 });

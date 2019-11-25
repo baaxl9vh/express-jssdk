@@ -200,7 +200,7 @@ const jssdk = (_options: IJSSDKOptions) => {
   }
 
   return (req: IExpressRequest, res: IExpressResponse) => {
-    const url = (req.query && req.query.url) || (req.body && req.body.url);
+    const url = (req && req.query && req.query.url) || (req && req.body && req.body.url);
     sign(url, (ret) => {
       res.json(ret);
     });
