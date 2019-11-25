@@ -1,6 +1,6 @@
 {
   "name": "express-jssdk",
-  "version": "0.0.23",
+  "version": "1.0.0",
   "description": "jssdk signature for express middleware",
   "main": "./dist/jssdk.js",
   "types": "./lib/jssdk.d.ts",
