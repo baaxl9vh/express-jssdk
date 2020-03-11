@@ -1,6 +1,6 @@
 {
   "name": "express-jssdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "jssdk signature for express middleware",
   "main": "./dist/jssdk.js",
   "types": "./lib/jssdk.d.ts",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/junxuwu/express-jssdk.git"
+    "url": "git+https://github.com/baaxl9vh/express-jssdk.git"
   },
   "keywords": [
     "jssdk",
@@ -22,12 +22,13 @@
   "author": "jay",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/junxuwu/express-jssdk/issues"
+    "url": "https://github.com/baaxl9vh/express-jssdk/issues"
   },
-  "homepage": "https://github.com/junxuwu/express-jssdk#readme",
+  "homepage": "https://github.com/baaxl9vh/express-jssdk#readme",
   "dependencies": {
+    "@types/express": "^4.17.0",
     "redis": "^2.8.0",
-    "@types/express": "^4.17.0"
+    "redlock": "^4.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -35,6 +36,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.8",
     "@types/redis": "^2.8.13",
+    "@types/redlock": "^4.0.1",
     "chai": "^4.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

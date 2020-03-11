@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import https from 'https';
 import redis, { ClientOpts, RedisClient } from 'redis';
+import Redlock from 'redlock';
 
 /**
  * 持久化
@@ -151,6 +152,8 @@ let redisClient: RedisClient;
 
 let options: IJSSDKOptions;
 
+let redlock: any;
+
 /**
  * 导出中间件
  * @param {object} _options
@@ -196,6 +199,14 @@ const jssdk = (_options: IJSSDKOptions) => {
     });
     redisClient.on('connect', () => {
       if (options.debug) { console.log(TAG, 'redis connected to the server:', redisClient.connection_id); }
+      redlock = new Redlock(
+        [redisClient],
+        {
+          driftFactor: 0.01,
+          retryCount: 10,
+          retryDelay: 200,
+          retryJitter: 200,
+        });
     });
   }
 
@@ -345,7 +356,6 @@ function sign(url: string, cb: (ret: ISignResult) => void) {
       appId: options.appId,
       nonceStr,
       timestamp,
-      url,
       signature,
     });
   });
@@ -372,7 +382,13 @@ function saveTokenOrTicket(saveType: SaveType, tokenOrTicket: number, data: ITok
       return;
     }
     const key = tokenOrTicket === TYPE_TICKET ? REDIS_KEY_TICKET : REDIS_KEY_TOKEN;
-    redisClient.set(key, JSON.stringify(data));
+    const lockName = tokenOrTicket === TYPE_TICKET ? LOCK_TICKET : LOCK_TOKEN;
+    redlock.lock(lockName, 1000).then((lock: any) => {
+      redisClient.set(key, JSON.stringify(data));
+      return lock.unlock().catch((err: Error) => {
+        console.error(err);
+      });
+    });
   } else if ('file' === saveType) {
     const fileName = tokenOrTicket === TYPE_TICKET ? options.ticketFilename : options.tokenFilename;
     if (!fileName) {
@@ -410,6 +426,9 @@ function refreshCache(tokenOrTicket: number, data: ITokenData) {
 
 const REDIS_KEY_TOKEN = 'jssdk.token';
 const REDIS_KEY_TICKET = 'jssdk.ticket';
+
+const LOCK_TOKEN = 'locks:token';
+const LOCK_TICKET = 'locks:ticket';
 
 /**
  * 读取缓存的票据token
